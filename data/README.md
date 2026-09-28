@@ -61,7 +61,7 @@ train = pd.read_csv("data/raw/train_FD001.txt", sep=r"\s+", header=None, names=c
 
 ---
 
-## 4. 하위셋 특성 [공식 문서 기준 — 직접 확인 필요]
+## 4. 하위셋 특성 [확인 완료]
 
 | 셋 | 운전조건 | 고장모드 | train 엔진 | test 엔진 |
 |---|---|---|---|---|
@@ -70,11 +70,7 @@ train = pd.read_csv("data/raw/train_FD001.txt", sep=r"\s+", header=None, names=c
 | FD003 | 1 | 2 (HPC, Fan) | 100 | 100 |
 | FD004 | 6 | 2 | 249 | 248 |
 
-> ⚠️ 공식 설명 문서와 실제 파일의 엔진 수가 다른 사례가 보고되어 있습니다.
-> 아래 명령으로 **직접 확인한 뒤 이 표를 갱신**하세요.
-> ```python
-> train.engine_id.nunique(), test.engine_id.nunique(), len(open("RUL_FD001.txt").readlines())
-> ```
+
 
 ---
 
