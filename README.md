@@ -40,7 +40,7 @@ C-MAPSS는 수백 대의 엔진이 각자 다른 초기 상태에서 열화되�
 flowchart LR
     A[재생기<br/>test 엔진 · 1사이클=1틱 · 배속] -->|MQTT<br/>fleet/subset/engine| B[Mosquitto]
     B --> C[추론 서비스<br/>롤링 특징 · RUL 예측 · 정비 정책]
-    C --> D[(InfluxDB)]
+    C --> D[(InfluxDB or timescale db)]
     D --> E[Grafana<br/>플릿 현황판 · 알람]
 ```
 
@@ -64,7 +64,7 @@ flowchart LR
 - 하위셋 4종(FD001~FD004)이 운전조건 수와 고장 모드 수에 따라 난이도가 다름
 - `train`은 고장까지의 전체 이력, `test`는 고장 전 임의 시점에서 잘려 있고, 정답 파일에 각 엔진의 **마지막 시점 잔여수명**이 주어짐
 
-원본 데이터는 저장소에 포함하지 않습니다. 다운로드와 준비 방법은 [`data/README.md`](data/README.md)를 참고하세요.
+s
 
 ---
 
@@ -141,8 +141,8 @@ fleet-rul-monitoring/
 
 | 단계 | 기간 | 상태 |
 |---|---|---|
-| 개념 학습 · 데이터 구조 확인 | 1주차 | ⏳ |
-| EDA | 2주차 | ⬜ |
+| 개념 학습 · 데이터 구조 확인 | 1주차 |⬜|
+| EDA | 2주차 | ⏳|
 | 설계 확정 (중간 점검) | 3주차 | ⬜ |
 | 베이스라인 · 모델 · 정책 | 4~7주차 | ⬜ |
 | Streamlit MVP | 8주차 | ⬜ |
