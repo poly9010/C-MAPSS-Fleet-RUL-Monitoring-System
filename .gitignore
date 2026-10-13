@@ -4,6 +4,7 @@ data/raw/
 data/processed/
 *.csv
 *.parquet
+models/
 
 # Python
 __pycache__/
