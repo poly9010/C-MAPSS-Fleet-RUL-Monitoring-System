@@ -142,10 +142,10 @@ fleet-rul-monitoring/
 | 단계 | 기간 | 상태 |
 |---|---|---|
 | 개념 학습 · 데이터 구조 확인 | 1주차 |⬜|
-| EDA | 2주차 | ⏳|
+| EDA | 2주차 | ⬜|
 | 설계 확정 (중간 점검) | 3주차 | ⬜ |
 | 베이스라인 · 모델 · 정책 | 4~7주차 | ⬜ |
-| Streamlit MVP | 8주차 | ⬜ |
+| Streamlit MVP | 8주차 | ⏳ |
 | MQTT · InfluxDB · Grafana · Docker | 9~11주차 | ⬜ |
 | 문서화 | 12주차 | ⬜ |
 
