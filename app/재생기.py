@@ -4,7 +4,7 @@ import numpy as np
 from collections import deque
 
 from src.config import ROOT, DATA_PROCESSED, SPLIT_PATH, MODELS_DIR, SENSORS, WINDOW_N, RUL_CAP, SEED
-N = 3
+N = 30
 
 # 재생기는 데이터가 들어오면 한줄씩 꺼내서 넘겨주고, 데이터가 더이상 들어오지 않는 센서는 종료 알림을 전달한다.
 @st.cache_data
