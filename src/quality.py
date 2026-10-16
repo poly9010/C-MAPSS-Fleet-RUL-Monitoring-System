@@ -54,8 +54,4 @@ def check_row(row, last_cycle, recent, qc_stats, sensors=SENSORS):
     
     return fails
 
-def main():
-    data = load_json()
-    
-if __name__ == "__main__":
-    main()   
+ 
