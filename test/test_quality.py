@@ -49,6 +49,22 @@ def test_not_stuck_below_k():
     row["s17"] = 393
 
     recent = deque(maxlen=WINDOW_N)
+    for i in range(k - 2):                         # 20개 → 새 행까지 21번
+        prev = make_normal_row(cycle=row["cycle"] - (k - 2) + i)
+        prev["s17"] = 393                          # s17만 고정
+        for s in SENSORS:
+            if s != "s17":
+                prev[s] += (i + 1) * 0.001         # 나머지 센서는 행마다 조금씩 다르게
+        recent.append(prev)
+
+    assert check_row(row, row["cycle"] - 1, recent, QC) == []
+
+def test_stuck_at_k():
+    k = QC["sensors"]["s17"]["k_stuck"]           # s17에서 가장 중복이 많은 값의 길이 : 22
+    row = make_normal_row()
+    row["s17"] = 393
+
+    recent = deque(maxlen=WINDOW_N)
     for i in range(k - 1):                         # 20개 → 새 행까지 21번
         prev = make_normal_row(cycle=row["cycle"] - (k - 2) + i)
         prev["s17"] = 393                          # s17만 고정
