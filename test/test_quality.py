@@ -43,7 +43,7 @@ def test_first_row_no_cycle_check(): #이전 행의 사이클이 none일 경우
     row = make_normal_row()
     assert check_row(row,None,deque(),QC) == []
     
-def test_not_stuck_below_k():
+def test_not_stuck_below_k(): #경계값 테스트(21에서 걸리지 않는지)
     k = QC["sensors"]["s17"]["k_stuck"]           # s17에서 가장 중복이 많은 값의 길이 : 22
     row = make_normal_row()
     row["s17"] = 393
@@ -59,7 +59,7 @@ def test_not_stuck_below_k():
 
     assert check_row(row, row["cycle"] - 1, recent, QC) == []
 
-def test_stuck_at_k():
+def test_stuck_at_k():#경계값 테스트(22에서 걸리는지)
     k = QC["sensors"]["s17"]["k_stuck"]           # s17에서 가장 중복이 많은 값의 길이 : 22
     row = make_normal_row()
     row["s17"] = 393
