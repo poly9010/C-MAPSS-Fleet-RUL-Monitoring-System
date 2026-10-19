@@ -4,8 +4,8 @@ from collections import deque
 import numpy as np
 import pandas as pd
 
-from src.quality import check_row, load_json
-from src.config import SENSORS,WINDOW_N
+from src.quality import check_row, load_json, update_qc_status
+from src.config import SENSORS,WINDOW_N, QC_ESCALATE_M 
 
 QC = load_json()          # 파일 맨 위에서 한 번만 읽음 (모든 테스트가 공유)
 
@@ -59,7 +59,7 @@ def test_not_stuck_below_k(): #경계값 테스트(21에서 걸리지 않는지)
 
     assert check_row(row, row["cycle"] - 1, recent, QC) == []
 
-def test_stuck_at_k():#경계값 테스트(22에서 걸리는지)
+def test_stuck_at_k(): #경계값 테스트(22에서 걸리는지)
     k = QC["sensors"]["s17"]["k_stuck"]           # s17에서 가장 중복이 많은 값의 길이 : 22
     row = make_normal_row()
     row["s17"] = 393
@@ -74,3 +74,24 @@ def test_stuck_at_k():#경계값 테스트(22에서 걸리는지)
         recent.append(prev)
 
     assert check_row(row, row["cycle"] - 1, recent, QC) == ['s17:stuck']
+
+def test_fail_streak_passes(): #정상인 행이 들어올 시 통과
+    row = make_normal_row()
+    fail_streak = 0
+    fails = check_row(row,row['cycle']-1,deque(), QC)
+
+    assert update_qc_status(fails,fail_streak) == (0,'정상')
+    
+def test_fail_streak(): #품질경고 테스트
+    row = make_normal_row()
+    fail_streak = 0
+    results = []
+    for i in range(3): # range 값은 m값 기준
+        row['s2'] = 9999
+        fails = check_row(row,row['cycle']-1,deque(), QC)
+        fail_streak,result = update_qc_status(fails, fail_streak)
+        results.append(result)
+
+    assert results == ['품질 경고','품질 경고','센서 점검 필요']
+    
+        

@@ -19,7 +19,7 @@
 
 import json
 import pandas as pd
-from src.config import SENSORS, QC_STATS_PATH
+from src.config import SENSORS, QC_STATS_PATH, QC_ESCALATE_M
 
 def load_json():
     with open(QC_STATS_PATH,'r',encoding='utf-8') as f:
@@ -54,4 +54,18 @@ def check_row(row, last_cycle, recent, qc_stats, sensors=SENSORS):
     
     return fails
 
- 
+def update_qc_status(fails, fail_streak, m = QC_ESCALATE_M): #상태 갱신 함수, fail_streak=엔진별로 품질 검사에 몇번 연속 실패했는지
+    if fails == [] :
+        fail_streak = 0 
+        return fail_streak, '정상' 
+    else :
+        fail_streak += 1
+        if m > fail_streak :
+            return fail_streak, '품질 경고'
+        else :
+            return fail_streak, '센서 점검 필요'
+    
+        
+        
+    
+
