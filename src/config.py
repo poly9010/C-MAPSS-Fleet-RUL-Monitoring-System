@@ -25,3 +25,5 @@ SEED = 42
 QC_STATS_PATH = MODELS_DIR / "qc_stats.json"
 QC_SIGMA_K = 5      # 범위 여유 폭: dev_min - kσ ~ dev_max + kσ
 QC_STUCK_MIN = 5      # 고착 기준 K의 하한
+
+QC_ESCALATE_M = 3 #[가정]
