@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_PROCESSED = ROOT / "data" / "1차 전처리(센서 제거)" / "train1_sens_filter.csv"
 SPLIT_PATH = ROOT / "data" / "split" / "engine_split.csv"
 MODELS_DIR = ROOT / "models"
+MODEL_PATH = ROOT/ "models/rul_model.pkl"
 
 # D01.1 확정: 표준편차 0이라 제거한 센서
 DROPPED_SENSORS = ["s1", "s5", "s6", "s10", "s16", "s18", "s19"]

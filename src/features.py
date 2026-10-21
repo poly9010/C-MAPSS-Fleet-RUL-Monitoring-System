@@ -4,12 +4,12 @@ import numpy as np
 from src.config import SENSORS, WINDOW_N
 
 
-def make_features(hist, N=WINDOW_N, sensors=SENSORS):
+def make_features(hist, N=WINDOW_N, sensors=SENSORS): #버퍼에 들어온 값들의 특징을 계산. 센서별로 계산하며 여러개의 엔진을 받을 수 있음.
     """
     hist: engine_id, cycle, 센서 열을 가진 DataFrame (한 엔진 또는 여러 엔진)
     반환: 각 행마다 '그 시점까지의 최근 N사이클'로만 계산한 특징 (과거만 사용)
       - {s}_mean : 최근 N사이클 평균
-      - {s}_slope: 최근 N사이클 기울기 (사이클당 변화량)
+      - {s}_slope: 최근 N사이클 기울기 = 최소제곱직선
 
     학습 시 전체 이력을 통째로 넣는 것과, 실시간에 최근 N줄짜리 버퍼만 넣는 것이
     같은 결과를 내야 한다 (이 파일 아래 tests/test_features.py에서 검증).
