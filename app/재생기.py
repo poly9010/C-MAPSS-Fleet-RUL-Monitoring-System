@@ -37,6 +37,8 @@ replay_data = {}
 for x in stream_20['engine_id'].unique(): #딕셔너리로 만듬
     replay_data[x] = stream_20[stream_20['engine_id']==x].sort_values('cycle').reset_index(drop=True)
 
+replay_data[8]['s2'].iloc[2:5] = replay_data[8]['s2'].iloc[2:5].apply(lambda x:x+9000) ## 결함 주입줄
+
 # 초기화는 한번만 수행해야 하므로 session_state 선언
 if 'cursor' not in st.session_state: 
     st.session_state['cursor'] = {eid: 0 for eid in engine_cols} # 딕셔너리{8(엔진아이디):0(사이클),9:2} : 재생기가 다음에 읽을 행 위치
@@ -56,8 +58,8 @@ if 'qc_status' not in st.session_state:
     st.session_state['qc_status'] = {eid: '정상' for eid in engine_cols}
 if 'pred' not in st.session_state: #최근 예측한 행의 RUL을 모아두는 딕셔너리
     st.session_state['pred'] = {eid: None for eid in engine_cols}
-if 'pred_cycle' not in st.session_state:
-    st.session_state['pred_cycle'] = {eid: {} for eid in engine_cols}
+if 'pred_cycle' not in st.session_state:#pred는 RUL을 저장, pred_cycle은 RUL을 계산한 cycle을 저장
+    st.session_state['pred_cycle'] = {eid: None for eid in engine_cols}
 
 cursor = st.session_state['cursor'] 
 buffer = st.session_state['buffer']
@@ -98,13 +100,19 @@ for eid in engine_cols:
 result = predict_fleet(model,new_row)
 for engine_id,rul in zip(result.keys(),result.values()):
     pred[engine_id] = rul
-    pred_cycle[engine_id].append(rul) #예측사이클 저장(pred값은 매 틱마다 덮어쓰기 때문에 따로 저장해놓아야함)
+    pred_cycle[engine_id] = buffer[engine_id][-1]['cycle'] #RUL을 예측한 사이클을 저장
     
 
 for eid in engine_cols:
     
-    st.subheader(f"엔진 {eid} · 방금 처리한 사이클: {last_cycle[eid]}")
-    st.subheader(f'엔진 {eid} : 예측 사이클: {pred[eid]}')
+    st.subheader(f"엔진 {eid} : 방금 처리한 사이클: {last_cycle[eid]}")
+    st.subheader(f'RUL : {pred[eid]:.1f}')
+    
+    note1 = "(워밍업)" if len(buffer[eid]) < WINDOW_N else ""
+    st.subheader(note1)
+    gap = last_cycle[eid] - pred_cycle[eid]
+    note2 = "" if gap == 0 else f"{gap} 사이클 전 예측"
+    st.subheader(note2)
 
 
 # col1, col2, col3 = st.columns(3)
