@@ -102,7 +102,8 @@ for engine_id,rul in zip(result.keys(),result.values()):
     pred[engine_id] = rul
     pred_cycle[engine_id] = buffer[engine_id][-1]['cycle'] #RUL을 예측한 사이클을 저장
     
-
+#알람
+#인자는 result
 for eid in engine_cols:
     
     st.subheader(f"엔진 {eid} : 방금 처리한 사이클: {last_cycle[eid]}")
