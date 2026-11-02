@@ -1,4 +1,4 @@
-# 해당 엔진의 현재 예측한 RUL이 T값보다 아래인지 
+# 알람 판단 : 예측한 RUL로 엔진별 알람 단계를 정함 (D09)
 """
 ④ 예측 결과(pred)가 있는 엔진만
    ↓
@@ -8,27 +8,24 @@
    ↓
 래칭: 새 단계 = max(기존 단계, 이번 단계)   ← 내려가지 않음
    ↓
-처음 1단계 이상이 된 순간이면 그 사이클을 기록 (우선순위 3번 기준)
+처음 1단계 이상이 된 순간이면 그 사이클을 기록 (우선순위 3번 기준) → 재생기.py에서 함
 """
-from src.config import ALARM_L, ALARM_T
+from src.config import ALARM_T, ALARM_T2, WINDOW_N
 
-def alarm(pred,pred_cycle):
-    if pred_cycle < 30: #워밍업구간 판단
-        return 
-
-    engine_cols = pred.keys() #엔진아이디 추출
-    alarm_true = {eid: 0 for eid in engine_cols} #엔진별로 알람에 해당되는지
-    
-    for eid in engine_cols:
-        if pred[eid] <= ALARM_T-10: 
-            #알람2단계
-            alarm_true[eid] = 2 
-
-        if pred[eid] <= ALARM_T and alarm_true[eid] == 0: #RUL이 T보다 작고 알람이 울린적이 없다면
-            #알람1단계 
-            alarm_true[eid] = 1
-
-        
-            
+ALARM_NAME = {0: '정상', 1: '정비 준비', 2: '긴급 : 정비 필요'} #단계별로 화면에 보여줄 이름
 
 
+def alarm_stage(rul, t=ALARM_T, t2=ALARM_T2): #예측 RUL 하나만 보고 이번 단계를 계산
+    if rul <= t2: #2단계 (30 이하)
+        return 2
+    elif rul <= t: #1단계 (40 이하)
+        return 1
+    else:
+        return 0
+
+
+# 예측이 나온 엔진만 매 틱마다 부름. old(기존 단계), rul(이번 예측), buffer_len(버퍼 길이)
+def update_alarm(old, rul, buffer_len, n=WINDOW_N):
+    if buffer_len < n: #워밍업 구간은 판단 안 하고 기존 단계 그대로 (D11)
+        return old
+    return max(old, alarm_stage(rul)) #래칭 : 한번 올라간 단계는 내려가지 않음
